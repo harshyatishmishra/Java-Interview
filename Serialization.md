@@ -211,7 +211,9 @@ Adding the writeReplace or readResolve method to a class is incompatible if the 
           } 
       }
     ```
-    ```Output
+    ```
+    Output:
+    
       i = 10
       j = 20
       Object has been serialized
@@ -313,7 +315,9 @@ Adding the writeReplace or readResolve method to a class is incompatible if the 
        } 
    } 
    ```
-   ```output
+   ```
+       Output:
+       
          i = 10
          j = 20
          Exception in thread "main" java.io.NotSerializableException
