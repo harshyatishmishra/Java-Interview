@@ -48,12 +48,277 @@ Adding the writeReplace or readResolve method to a class is incompatible if the 
 ## Object Serialization with Inheritance
 
 1.  If superclass is serializable then subclass is automatically serializable.
+      ```
+      class A implements Serializable 
+      { 
+         int i; 
+      
+       // parameterized constructor 
+       public A(int i)  
+       { 
+           this.i = i; 
+       } 
+      
+      } 
+      class B extends A 
+      { 
+          int j; 
+
+          // parameterized constructor 
+          public B(int i, int j)  
+          { 
+              super(i); 
+              this.j = j; 
+          } 
+      }
+      public class Test 
+      { 
+          public static void main(String[] args)  
+                  throws Exception  
+          { 
+              B b1 = new B(10,20); 
+
+              System.out.println("i = " + b1.i); 
+              System.out.println("j = " + b1.j); 
+
+              /* Serializing B's(subclass) object */
+
+              //Saving of object in a file 
+              FileOutputStream fos = new FileOutputStream("abc.ser"); 
+              ObjectOutputStream oos = new ObjectOutputStream(fos); 
+
+              // Method for serialization of B's class object 
+              oos.writeObject(b1); 
+
+              // closing streams 
+              oos.close(); 
+              fos.close(); 
+
+              System.out.println("Object has been serialized"); 
+
+              /* De-Serializing B's(subclass) object */
+
+              // Reading the object from a file 
+              FileInputStream fis = new FileInputStream("abc.ser"); 
+              ObjectInputStream ois = new ObjectInputStream(fis); 
+
+              // Method for de-serialization of B's class object 
+              B b2 = (B)ois.readObject(); 
+
+              // closing streams 
+              ois.close(); 
+              fis.close(); 
+
+              System.out.println("Object has been deserialized"); 
+
+              System.out.println("i = " + b2.i); 
+              System.out.println("j = " + b2.j); 
+          } 
+      } 
+      ```
+      ```
+      Output:
+
+         i = 10
+         j = 20
+         Object has been serialized
+         Object has been deserialized
+         i = 10
+         j = 20
+      ```
 2.  If a superclass is not serializable then subclass can still be serialized.
     * Serialization: At the time of serialization, if any instance variable is inheriting from non-serializable superclass, then JVM ignores original value of that instance variable and save default value to the file.
     
     * De- Serialization: At the time of de-serialization, if any non-serializable superclass is present, then JVM will execute instance control flow in the superclass. To execute instance control flow in a class, JVM will always invoke default(no-arg) constructor of that class. So every non-serializable superclass must necessarily contain default constructor, otherwise we will get runtime-exception.
+    ```
+      class A  
+      { 
+          int i; 
+
+          // parameterized constructor 
+          public A(int i)  
+          { 
+              this.i = i; 
+          } 
+
+          // default constructor 
+          // this constructor must be present 
+          // otherwise we will get runtime exception 
+          public A() 
+          { 
+              i = 50; 
+              System.out.println("A's class constructor called"); 
+          } 
+
+      } 
+
+      // subclass B  
+      // implementing Serializable interface 
+      class B extends A implements Serializable 
+      { 
+          int j; 
+
+          // parameterized constructor 
+          public B(int i,int j)  
+          { 
+              super(i); 
+              this.j = j; 
+          } 
+      } 
+
+      public class Test 
+      { 
+          public static void main(String[] args)  
+                  throws Exception  
+          { 
+              B b1 = new B(10,20); 
+
+              System.out.println("i = " + b1.i); 
+              System.out.println("j = " + b1.j); 
+
+              // Serializing B's(subclass) object  
+
+              //Saving of object in a file 
+              FileOutputStream fos = new FileOutputStream("abc.ser"); 
+              ObjectOutputStream oos = new ObjectOutputStream(fos); 
+
+              // Method for serialization of B's class object 
+              oos.writeObject(b1); 
+
+              // closing streams 
+              oos.close(); 
+              fos.close(); 
+
+              System.out.println("Object has been serialized"); 
+
+              // De-Serializing B's(subclass) object  
+
+              // Reading the object from a file 
+              FileInputStream fis = new FileInputStream("abc.ser"); 
+              ObjectInputStream ois = new ObjectInputStream(fis); 
+
+              // Method for de-serialization of B's class object 
+              B b2 = (B)ois.readObject(); 
+
+              // closing streams 
+              ois.close(); 
+              fis.close(); 
+
+              System.out.println("Object has been deserialized"); 
+
+              System.out.println("i = " + b2.i); 
+              System.out.println("j = " + b2.j); 
+          } 
+      }
+    ```
+    ```Output
+      i = 10
+      j = 20
+      Object has been serialized
+      A's class constructor called
+      Object has been deserialized
+      i = 0
+      j = 20
+    ```
 3.  If the superclass is serializable but we don’t want the subclass to be serialized.
     * There is no direct way to prevent subclass from serialization in java. One possible way by which a programmer can achieve this is by implementing the writeObject() and readObject() methods in the subclass and needs to throw NotSerializableException from these methods. These methods are executed during serialization and de-serialization respectively. By overriding these methods, we are just implementing our own custom serialization.
+   ```
+   class A implements Serializable 
+   { 
+       int i; 
 
+       // parameterized constructor 
+       public A(int i)  
+       { 
+           this.i = i; 
+       } 
+
+   } 
+
+   // subclass B  
+   // B class doesn't implement Serializable 
+   // interface. 
+   class B extends A 
+   { 
+       int j; 
+
+       // parameterized constructor 
+       public B(int i,int j)  
+       { 
+           super(i); 
+           this.j = j; 
+       } 
+
+       // By implementing writeObject method,  
+       // we can prevent 
+       // subclass from serialization 
+       private void writeObject(ObjectOutputStream out) throws IOException 
+       { 
+           throw new NotSerializableException(); 
+       } 
+
+       // By implementing readObject method,  
+       // we can prevent 
+       // subclass from de-serialization 
+       private void readObject(ObjectInputStream in) throws IOException 
+       { 
+           throw new NotSerializableException(); 
+       } 
+
+   } 
+
+   // Driver class 
+   public class Test 
+   { 
+       public static void main(String[] args)  
+               throws Exception  
+       { 
+           B b1 = new B(10, 20); 
+
+           System.out.println("i = " + b1.i); 
+           System.out.println("j = " + b1.j); 
+
+           // Serializing B's(subclass) object  
+
+           //Saving of object in a file 
+           FileOutputStream fos = new FileOutputStream("abc.ser"); 
+           ObjectOutputStream oos = new ObjectOutputStream(fos); 
+
+           // Method for serialization of B's class object 
+           oos.writeObject(b1); 
+
+           // closing streams 
+           oos.close(); 
+           fos.close(); 
+
+           System.out.println("Object has been serialized"); 
+
+           // De-Serializing B's(subclass) object  
+
+           // Reading the object from a file 
+           FileInputStream fis = new FileInputStream("abc.ser"); 
+           ObjectInputStream ois = new ObjectInputStream(fis); 
+
+           // Method for de-serialization of B's class object 
+           B b2 = (B)ois.readObject(); 
+
+           // closing streams 
+           ois.close(); 
+           fis.close(); 
+
+           System.out.println("Object has been deserialized"); 
+
+           System.out.println("i = " + b2.i); 
+           System.out.println("j = " + b2.j); 
+       } 
+   } 
+   ```
+   ```output
+         i = 10
+         j = 20
+         Exception in thread "main" java.io.NotSerializableException
+            at B.writeObject(Test.java:44)
+   
+   ```
 
 
