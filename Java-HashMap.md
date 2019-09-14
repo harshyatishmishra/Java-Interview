@@ -1,3 +1,14 @@
+### HashMap performance Improvement Changes in Java 8
+Here I am going to discuss JDK 8’s new strategy for dealing with Hash collisions. Earlier before Java 8, the performance of the HashMap was poor due to the hash collision, it degrades the performance of HashMap significantly. This change can be notifiable only when if you are using the HashMap for a large number of elements, why (see below points)?
+
+The traversal of HashMap, get(), and other methods lookup time of HashMap have a negative impact due to hash collisions. This situation you can face when multiple keys end up in the same bucket, then values along with their keys are placed in a linked list. So, the retrieval time of elements from HashMap increases from O(1) to O(n). Because the linked list has to be traversed to get the entry in the worst case scenario.
+
+But Java 8 has come with the following new strategy for HashMap objects in case of high collisions.
+
+* To address this issue, Java 8 hash elements use balanced trees instead of linked lists after a certain threshold is reached. Which means HashMap starts with storing Entry objects in a linked list but after the number of items in a hash becomes larger than a certain threshold. The hash will change from using a linked list to a balanced tree.
+* Above changes ensure the performance of O(log(n)) in worst case scenarios and O(1) with proper hashCode().
+* The alternative String hash function added in Java 7 has been removed.
+
 ### Contract
 You must override hashCode in every class that overrides equals. Failure to do so will result in a violation of the general
 contract for Object.hashCode, which will prevent your class from functioning properly in conjunction with all hash-based 
