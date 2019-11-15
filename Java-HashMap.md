@@ -43,3 +43,19 @@ if there is an object k such that second.equals(k) is true it won't find any as 
 #### Hashing retrieval is a two-step process.
 Find the right bucket (using hashCode())
 Search the bucket for the right element (using equals() )
+
+#### Rehashing:
+As the name suggests, rehashing means hashing again. Basically, when the load factor increases to more than its pre-defined value (default value of load factor is 0.75), the complexity increases. So to overcome this, the size of the array is increased (doubled) and all the values are hashed again and stored in the new double sized array to maintain a low load factor and low complexity.
+
+#### Why rehashing?
+Rehashing is done because whenever key value pairs are inserted into the map, the load factor increases, which implies that the time complexity also increases as explained above. This might not give the required time complexity of O(1).
+
+Hence, rehash must be done, increasing the size of the bucketArray so as to reduce the load factor and the time complexity.
+
+#### How Rehashing is done?
+Rehashing can be done as follows:
+
+For each addition of a new entry to the map, check the load factor.
+If it’s greater than its pre-defined value (or default value of 0.75 if not given), then Rehash.
+For Rehash, make a new array of double the previous size and make it the new bucketarray.
+Then traverse to each element in the old bucketArray and call the insert() for each so as to insert it into the new larger bucket array.
