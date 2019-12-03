@@ -26,3 +26,4 @@ class singleton {
 	}
 }
 ```
+https://refactoring.guru/design-patterns/singleton
