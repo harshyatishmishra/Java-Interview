@@ -1,4 +1,5 @@
 Idempotent - PUT/DELETE/GET
+
 Non-Idempotent - POST
 
 POST- Create Resource
