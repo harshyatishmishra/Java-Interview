@@ -41,3 +41,10 @@ Match method using Pointcuts
 
 #### Optional Practice
 
+#### Spring Singleton Vs Java Singleton
+
+#### Connection Pooling
+
+#### Proxy Server
+
+#### Increased Number of request to server: Rate limiting
