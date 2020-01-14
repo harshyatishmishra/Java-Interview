@@ -48,3 +48,9 @@ Match method using Pointcuts
 #### Proxy Server
 
 #### Increased Number of request to server: Rate limiting
+
+#### Spring transaction propogation
+
+#### Isolation: Dirty read, Phantom 
+
+#### Distributed DB 2 Phase commit
