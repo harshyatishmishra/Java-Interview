@@ -31,3 +31,13 @@ Annotate method using @Secured
 Annotate method using JSR-250 @RolesAllowed
 Use Spring’s Pre and Post invocation Annotations
 Match method using Pointcuts
+
+
+#### if hash code is same for "str" and new String("str") then how hashmap key is immutable
+
+#### Cache Manager implementation
+
+#### When to use composition and inheritance
+
+#### Optional Practice
+
