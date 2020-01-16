@@ -16,3 +16,20 @@ The extra objects created per concurrent hashmap using default constructor are n
 ConcurrentHashMap<String, Integer> instance = new ConcurrentHashMap<String, Integer>(16, 0.9f, 1);
 ```
 An initial capacity of 16 ensures a reasonably good number of elements before resizing happens. Load factor of 0.9 ensures a dense packaging inside ConcurrentHashMap which will optimize memory use. And concurrencyLevel set to 1 will ensure that only one shard is created and maintained
+
+
+##### JDK1.7 
+First divide the data into segments, and then assign a lock to each segment of data. When a thread occupies a lock to access one segment of data, the data in other segments can also be accessed by other threads.
+
+##### ConcurrentHashMap is composed of Segment array structure and HashEntry array structure .
+
+Segment implements ReentrantLock, so Segment is a reentrant lock that plays the role of a lock. HashEntry is used to store key-value data.
+`
+static  class  Segment <K, V> extends  ReentrantLock  implements  Serializable {
+}`
+A ConcurrentHashMap contains an array of segments. The structure of Segment is similar to HashMap. It is an array and linked list structure. A Segment contains an HashEntry array. Each HashEntry is an element of a linked list structure. Each Segment guards the elements in a HashEntry array. When making changes, you must first acquire the lock for the corresponding segment.
+
+##### JDK1.8 
+ConcurrentHashMap cancels segmentation locks and uses CAS and synchronized to ensure concurrency security. The data structure is similar to the structure of HashMap 1.8, array + linked list / red and black binary tree.
+
+synchronized only locks the first node of the current linked list or red-black binary tree, so as long as the hash does not conflict, no concurrency will occur, and the efficiency will be increased by N times.
