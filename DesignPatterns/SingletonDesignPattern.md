@@ -1,3 +1,6 @@
+* For frequently used objects, you can omit the time it takes to create them, which is a considerable system overhead for those heavyweight objects
+* Because the number of new operations is reduced, the frequency of system memory usage is also reduced, which will reduce GC pressure and shorten GC pause times.
+
 * Singleton pattern restricts the instantiation of a class and ensures that only one instance of the class exists in the java virtual machine.
 * The singleton class must provide a global access point to get the instance of the class.
 * Singleton pattern is used for logging, drivers objects, caching and thread pool.
