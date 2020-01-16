@@ -35,4 +35,7 @@ But If you have a lot of constructor parameters things can look messy, particula
 * ##### newContext classloader: sun.misc.Launcher$AppClassLoader@73d16e93
     
 * If you want to return same instance of class in in every subsequent request then comment lines in which we created second ApplicationContext as given in below code
-    
+
+**IOC**: Inversion of control is also called dependency injection. IOC uses the java reflection mechanism and AOP uses the proxy pattern. The IOC concept may seem abstract, but it is easy to understand. The simple point is to leave the object to the container management. You only need to configure the corresponding bean and set the relevant properties in the spring configuration file, and let the spring container generate the instance object and management object of the class. When the spring container starts, spring will initialize all the beans you configured in the configuration file, and then when you need to call, assign those beans that have been initialized to the classes you need to call these beans.
+
+**AOP**: Aspect-oriented programming. (Aspect-Oriented Programming). AOP can be said to complement and improve OOP. OOP introduces concepts such as encapsulation, inheritance, and polymorphism to build an object hierarchy that simulates a collection of public behavior. The technologies for implementing AOP are mainly divided into two categories: one is to use dynamic proxy technology to intercept the message and decorate the message to replace the execution of the original object behavior; the second is to use the static weaving method to introduce Specific syntax creates "aspects" so that the compiler can weave code about "aspects" during compilation, which is a static proxy.
