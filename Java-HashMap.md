@@ -33,6 +33,12 @@ Although it is not necessary to override equals() if we override hashCode(), let
 case where we know that two objects of MyClass are equal if their importantField is equal but we do not override equals().
 
 #### Override only hashCode
+##### The purpose of this hash code is to determine the index position of the object in the hash table. hashCode () is defined in JDK's Object.java, which means that any class in Java includes a hashCode () function. It should also be noted that: The hashcode method of Object is a native method, that is, implemented in C or C ++. This method is usually used to convert the memory address of an object to an integer and then return it.
+
+##### Let's use "HashSet to check for duplicates" as an example to illustrate why hashCode is needed:
+
+##### When you add an object to a HashSet, the HashSet first calculates the hashcode value of the object to determine where the object is added, and also compares it with the hashcode values ​​of other objects that have already been added. If there is no matching hashcode, the HashSet assumes that the object is not duplicated. appear. However, if objects with the same hashcode value are found, the equals () method will be called to check whether the objects with the same hashcode are really the same. If the two are the same, the HashSet will not let its join operation succeed. If it is different, it will be re-hashed to another location. (Extracted from my second Java enlightenment "Head fist java"). In this way, we have greatly reduced the number of equals, and accordingly greatly improved the execution speed.
+
 If you only override hashCode then when you call myMap.put(first,someValue) it takes first, calculates its hashCode and 
 stores it in a given bucket. Then when you call myMap.put(second,someOtherValue) it should replace first with second as 
 per the Map Documentation because they are equal (according to the business requirement).
@@ -43,6 +49,21 @@ if there is an object k such that second.equals(k) is true it won't find any as 
 #### Hashing retrieval is a two-step process.
 Find the right bucket (using hashCode())
 Search the bucket for the right element (using equals() )
+
+####  Related rules of hashCode () and equals ()
+* If two objects are equal, the hashcode must also be the same
+* Two objects are equal, and calling the equals method on both objects returns true
+* Two objects have the same hashcode value, and they are not necessarily equal
+* Therefore, if the equals method is overridden, the hashCode method must also be overridden
+* The default behavior of hashCode () is to generate unique values ​​for objects on the heap. If hashCode () is not overridden, the two objects of the class will not be equal anyway (even if they point to the same data)
+
+#### Why do two objects have the same hashcode value, and they are not necessarily equal?
+Explain the problem of a small partner here. The following is an excerpt from Head Fisrt Java.
+
+This is because the hash algorithm used by hashCode () may just happen to allow multiple objects to return the same hash value. The worse the hash algorithm is, the easier it is to collide, but this is also related to the characteristics of the data range distribution (the so-called collision means that different objects get the same hashCode).
+
+We just mentioned the HashSet. If the HashSet is compared and there are multiple objects in the same hashcode, it will use equals () to determine whether they are really the same. In other words, hashcode is only used to reduce the search cost.
+
 
 #### Rehashing:
 As the name suggests, rehashing means hashing again. Basically, when the load factor increases to more than its pre-defined value (default value of load factor is 0.75), the complexity increases. So to overcome this, the size of the array is increased (doubled) and all the values are hashed again and stored in the new double sized array to maintain a low load factor and low complexity.
