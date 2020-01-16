@@ -186,3 +186,34 @@ s = Hello_World
 Parsing:
 
 You can use reflection to access private members, and then reflect the value property of the String object, and then change the structure of the array through the obtained value reference. But generally we don't do this, here is just a brief mention of this thing.
+
+##### What is the difference between Arraylist and LinkedList? (Note the content from the analysis of the data structure)
+ 1. Whether to ensure thread safety: ArrayList and LinkedList are not synchronized, that is, thread safety is not guaranteed;
+ 2. The underlying data structure: Arraylist uses the Object array at the bottom; LinkedList uses the doubly linked list data structure at the bottom (note the difference between doubly linked lists and doubly circular linked lists :);
+ 3. Whether insertion and deletion are affected by element position: ① ArrayList uses array storage, so the time complexity of inserting and deleting elements is affected by element position. For example add(E e), when executing a method, ArrayList will append the specified elements to the end of the list by default. In this case, the time complexity is O (1). But if you want to insert and delete elements at the specified position i add(int index, E element), the time complexity is O (ni). Because when performing the above operation, the (ni) element in the set and the (ni) element after the i element must perform the backward / forward operation. ② LinkedList is stored in a linked list, so the time complexity of inserting and deleting elements is not affected by the position of the elements. They are all approximately O (1) and the array is approximately O (n).
+ 4. Whether to support fast random access: LinkedList does not support efficient random element access, while ArrayList does. Fast random access is to quickly obtain the element object (corresponding to the get(int index)method) by the sequence number of the element .
+ 5. Memory space occupation: The waste of space in ArrayList is mainly reflected in the fact that a certain amount of capacity space is reserved at the end of the list, while the space cost of LinkedList is reflected in that each element of it consumes more space than ArrayList (because To store direct successors and direct predecessors and data).
+Supplementary content: RandomAccess interface
+
+`public  interface  RandomAccess {
+}`
+Looking at the source code, we find that there is actually no definition in the RandomAccess interface. So, in my opinion, the RandomAccess interface is just an identity. What to mark? Identifies the classes that implement this interface with random access.
+
+
+In the binarySearch () method, it is necessary to determine whether the passed list is an instance of RamdomAccess. If it is, call the indexedBinarySearch () method. If it is not, then call the iteratorBinarySearch () method.
+
+    public  static  < T > 
+    int binarySearch ( List <? the extends ? the Comparable <Super T > > List, T Key) {
+         IF (List the instanceof  the RandomAccess  || List . size () < BINARYSEARCH_THRESHOLD )
+             return  the Collections . indexedBinarySearch (List, Key);
+         else 
+            return  Collections . iteratorBinarySearch (list, key);
+    }
+ArraysList implements the RandomAccess interface, while LinkedList does not. why? I think it is still related to the underlying data structure! ArraysList is an array at the bottom and LinkedList is a linked list at the bottom. Arrays naturally support random access with O (1) time complexity, so they are called fast random access. The linked list needs to traverse to a specific position to access the elements in a specific position. The time complexity is O (n), so fast random access is not supported. ArraysList implements the RandomAccess interface, which shows that it has fast random access capabilities. The RandomAccess interface is just for identification, not that the ArraysList implements the RandomAccess interface to have fast random access!
+
+##### Let's summarize the list traversal options:
+
+A list that implements the RandomAccess interface, the ordinary for loop is preferred, followed by foreach,
+The ist that does not implement the RandomAccess interface, prefers iterator traversal (foreach traverses the bottom layer also through iterator). For large-size data, do not use ordinary for loops.
+
+
