@@ -52,8 +52,35 @@ from lowest to highest we have: Interface, superclass, class, interface method, 
 * Case 1: - Invoking method1() -> a transaction is started. When method1() calls method2() no new transaction is started, because there is already one.
 * Case 2: - Invoking method1() -> no transaction is started. When method1() calls method2() NO new transaction is started. This is because @Transactional does not work when calling a method from within the same class. It would work if you would call method2() from another class.    
 
-#### Transaction Propagation
+#### Spring Transaction Propagation
 * Propagation defines our business logic ‘s transaction boundary. Spring manages to start and pause a transaction according to our propagation setting.
+##### Transaction propagation behavior (to solve the transaction problem of business layer methods calling each other): When a transaction method is called by another transaction method, you must specify how the transaction should be propagated. For example, a method may continue to run in an existing transaction, or it may start a new transaction and run in its own transaction.
+
+##### Support for current transactions:
+
+* **TransactionDefinition.PROPAGATION_REQUIRED**: If a transaction currently exists, join the transaction; if there is no transaction, create a new transaction.
+* **TransactionDefinition.PROPAGATION_SUPPORTS**: If a transaction currently exists, join the transaction; if there is no transaction, continue to run in a non-transactional manner.
+* **TransactionDefinition.PROPAGATION_MANDATORY**: If a transaction currently exists, join the transaction; if there is no transaction, throw an exception. (Mandatory: mandatory)
+
+##### Cases where current transaction is not supported:
+
+* **TransactionDefinition.PROPAGATION_REQUIRES_NEW**: Create a new transaction, if the current transaction exists, suspend the current transaction.
+* **TransactionDefinition.PROPAGATION_NOT_SUPPORTED**: Run in non-transactional mode. If a transaction currently exists, suspend the current transaction.
+* **TransactionDefinition.PROPAGATION_NEVER**: Run in non-transactional mode and throw an exception if a transaction currently exists.
+
+#### Other situations:
+
+* **TransactionDefinition.PROPAGATION_NESTED**: If a transaction currently exists, create a transaction to run as a nested transaction of the current transaction; if there is no current transaction, this value is equivalent to TransactionDefinition.PROPAGATION_REQUIRED.
+
+##### Isolation level
+Five constants that define the isolation level are defined in the TransactionDefinition interface:
+
+* **TransactionDefinition.ISOLATION_DEFAULT**: Use the default isolation level of the back-end database, the REPEATABLE_READ isolation level adopted by Mysql by default, and the READ_COMMITTED isolation level adopted by Oracle by default.
+* **TransactionDefinition.ISOLATION_READ_UNCOMMITTED**: the lowest isolation level that allows reading of uncommitted data changes, which may cause dirty reads, phantom reads, or non-repeatable reads
+* **TransactionDefinition.ISOLATION_READ_COMMITTED**: Allows reading of data that has been committed by concurrent transactions, which can prevent dirty reads, but phantom or non-repeatable reads may still occur
+* **TransactionDefinition.ISOLATION_REPEATABLE_READ**: The results of multiple reads of the same field are consistent, unless the data is modified by the transaction itself, which can prevent dirty reads and non-repeatable reads, but phantom reads may still occur.
+* **TransactionDefinition.ISOLATION_SERIALIZABLE**: The highest isolation level, fully obeys the ACID isolation level. All transactions are executed one by one in order, so there is no possibility of interference between transactions, that is, this level can prevent dirty reads, non-repeatable reads, and phantom reads. But this will seriously affect the performance of the program. This level is usually not used.
+
 
 * #### ` REQUIRED is the default propagation.` Spring checks if there is an active transaction, then `it creates a new one if nothing existed. Otherwise, the business logic appends to the currently active transaction`.
 
