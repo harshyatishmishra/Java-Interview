@@ -216,4 +216,14 @@ ArraysList implements the RandomAccess interface, while LinkedList does not. why
 A list that implements the RandomAccess interface, the ordinary for loop is preferred, followed by foreach,
 The ist that does not implement the RandomAccess interface, prefers iterator traversal (foreach traverses the bottom layer also through iterator). For large-size data, do not use ordinary for loops.
 
+#### Difference List ls = new ArrayList<>(); ArrayList ls = new ArrayList<>();
 
+In fact, everywhere you need to declare a reference variable, you should always use the supertype, like `Map for passing HashMap`, Set for giving HashSet and `List for passing ArrayList, LinkedList or Vector.`
+
+You should use interface as type on the return type of method, type of arguments, etc. as shown below? Now the big question comes, Why should you do that?
+
+* to take advantage of Polymorphism. If you use interface than in future if the new implementation is shipped, then you are not required to change your program.
+
+For example, an application written using List will work as expected whether you pass a LinkedList, Vector, or ArrayList because they all implement List interface, they obey the contract exposed by List interface.
+
+*  flexibility offered by Polymorphism and Inheritance
