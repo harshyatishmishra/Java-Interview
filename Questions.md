@@ -54,3 +54,11 @@ Match method using Pointcuts
 #### Isolation: Dirty read, Phantom 
 
 #### Distributed DB 2 Phase commit
+
+#### How to insure that code is only accessed by n nmber of thread.
+
+#### Difference List ls = new ArrayList<>(); ArrayList ls = new ArrayList<>();
+
+####
+
+
