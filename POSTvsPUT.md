@@ -3,6 +3,7 @@ Idempotent - PUT/DELETE/GET
 Non-Idempotent - POST
 
 POST- Create Resource
+
 PUT- Update resource
 
 `POST is neither safe nor idempotent.` It is therefore recommended for non-idempotent resource requests.
